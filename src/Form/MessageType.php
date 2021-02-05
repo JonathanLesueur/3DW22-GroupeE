@@ -2,29 +2,25 @@
 
 namespace App\Form;
 
-use App\Entity\User;
+use App\Entity\Message;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserType extends AbstractType
+class MessageType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('email')
-            ->add('password')
-            ->add('firstname')
-            ->add('lastname')
-            ->add('birthdate')
-            ->add('identifiant')
+            ->add('title')
+            ->add('content')
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => Message::class,
         ]);
     }
 }

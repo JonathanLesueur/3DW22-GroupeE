@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Message index{% endblock %}
+
+{% block body %}
+    <h1>Message index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Title</th>
+                <th>Content</th>
+                <th>CreatedAt</th>
+                <th>UpdatedAt</th>
+                <th>Visible</th>
+                <th>actions</th>
+                <th>user</th>
+                <th>Like</th>
+                <th>Dislike</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for message in messages %}
+            <tr>
+                <td>{{ message.id }}</td>
+                <td>{{ message.title }}</td>
+                <td>{{ message.content }}</td>
+                <td>{{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ message.updatedAt ? message.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ message.visible ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('message_show', {'id': message.id}) }}">show</a>
+                    <a href="{{ path('message_edit', {'id': message.id}) }}">edit</a>
+                </td>
+                <td>
+                    {{ message.user.firstname }} {{ message.user.lastname }}
+                </td>
+                <td><form method="POST" action="{{ path('message_like', {'id': message.id}) }}"><button type="submit">Like ({{ message.likes|length }})</button></a></form></td>
+                <td><form method="POST" action="{{ path('message_dislike', {'id': message.id}) }}"><button type="submit">Dislike ({{ message.dislikes|length }})</button></a></form></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('message_new') }}">Create new</a>
+{% endblock %}

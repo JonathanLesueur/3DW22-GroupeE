@@ -3,13 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @ORM\Table(name="`user`")
  */
 class User implements UserInterface
 {
@@ -39,37 +40,56 @@ class User implements UserInterface
     /**
      * @ORM\Column(type="string", length=100)
      */
-    private $firstName;
+    private $firstname;
 
     /**
      * @ORM\Column(type="string", length=100)
      */
-    private $lastName;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $address;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $phone;
-
-    /**
-     * @ORM\Column(type="string", length=100)
-     */
-    private $name;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $dateNaissance;
+    private $lastname;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private $createAt;
+    private $birthdate;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $identifiant;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $createdAt;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $connectedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Like::class, mappedBy="userId")
+     */
+    private $likes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Dislike::class, mappedBy="userId")
+     */
+    private $dislikes;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Message::class, mappedBy="user")
+     */
+    private $messages;
+
+    public function __construct()
+    {
+        $this->likes = new ArrayCollection();
+        $this->dislikes = new ArrayCollection();
+        $this->messages = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->connectedAt = new \DateTime('1970-01-01 00:00:00');
+    }
 
     public function getId(): ?int
     {
@@ -149,92 +169,164 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-    public function getFirstName(): ?string
+    public function getFirstname(): ?string
     {
-        return $this->firstName;
+        return $this->firstname;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setFirstname(string $firstname): self
     {
-        $this->firstName = $firstName;
+        $this->firstname = $firstname;
 
         return $this;
     }
 
-    public function getLastName(): ?string
+    public function getLastname(): ?string
     {
-        return $this->lastName;
+        return $this->lastname;
     }
 
-    public function setLastName(string $lastName): self
+    public function setLastname(string $lastname): self
     {
-        $this->lastName = $lastName;
+        $this->lastname = $lastname;
 
         return $this;
     }
 
-    public function getAddress(): ?string
+    public function getBirthdate(): ?\DateTimeInterface
     {
-        return $this->address;
+        return $this->birthdate;
     }
 
-    public function setAddress(?string $address): self
+    public function setBirthdate(\DateTimeInterface $birthdate): self
     {
-        $this->address = $address;
+        $this->birthdate = $birthdate;
 
         return $this;
     }
 
-    public function getPhone(): ?int
+    public function getIdentifiant(): ?string
     {
-        return $this->phone;
+        return $this->identifiant;
     }
 
-    public function setPhone(?int $phone): self
+    public function setIdentifiant(string $identifiant): self
     {
-        $this->phone = $phone;
+        $this->identifiant = $identifiant;
 
         return $this;
     }
 
-    public function getName(): ?string
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->name;
+        return $this->createdAt;
     }
 
-    public function setName(string $name): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
-        $this->name = $name;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getDateNaissance(): ?\DateTimeInterface
+    public function getConnectedAt(): ?\DateTimeInterface
     {
-        return $this->dateNaissance;
+        return $this->connectedAt;
     }
 
-    public function setDateNaissance(?\DateTimeInterface $dateNaissance): self
+    public function setConnectedAt(\DateTimeInterface $connectedAt): self
     {
-        $this->dateNaissance = $dateNaissance;
+        $this->connectedAt = $connectedAt;
 
         return $this;
     }
 
-    public function __construct()
+    /**
+     * @return Collection|Like[]
+     */
+    public function getLikes(): Collection
     {
-        $this->createAt= new \DateTime();
+        return $this->likes;
     }
 
-
-    public function getCreateAt(): ?\DateTimeInterface
+    public function addLike(Like $like): self
     {
-        return $this->createAt;
+        if (!$this->likes->contains($like)) {
+            $this->likes[] = $like;
+            $like->setUserId($this);
+        }
+
+        return $this;
     }
 
-    public function setCreateAt(\DateTimeInterface $createAt): self
+    public function removeLike(Like $like): self
     {
-        $this->createAt = $createAt;
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getUserId() === $this) {
+                $like->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Dislike[]
+     */
+    public function getDislikes(): Collection
+    {
+        return $this->dislikes;
+    }
+
+    public function addDislike(Dislike $dislike): self
+    {
+        if (!$this->dislikes->contains($dislike)) {
+            $this->dislikes[] = $dislike;
+            $dislike->setUserId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDislike(Dislike $dislike): self
+    {
+        if ($this->dislikes->removeElement($dislike)) {
+            // set the owning side to null (unless already changed)
+            if ($dislike->getUserId() === $this) {
+                $dislike->setUserId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Message[]
+     */
+    public function getMessages(): Collection
+    {
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message): self
+    {
+        if (!$this->messages->contains($message)) {
+            $this->messages[] = $message;
+            $message->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMessage(Message $message): self
+    {
+        if ($this->messages->removeElement($message)) {
+            // set the owning side to null (unless already changed)
+            if ($message->getUser() === $this) {
+                $message->setUser(null);
+            }
+        }
 
         return $this;
     }

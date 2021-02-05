@@ -24,20 +24,28 @@
                 <td>{{ user.password }}</td>
             </tr>
             <tr>
-                <th>FirstName</th>
-                <td>{{ user.firstName }}</td>
+                <th>Firstname</th>
+                <td>{{ user.firstname }}</td>
             </tr>
             <tr>
-                <th>LastName</th>
-                <td>{{ user.lastName }}</td>
+                <th>Lastname</th>
+                <td>{{ user.lastname }}</td>
             </tr>
             <tr>
-                <th>Address</th>
-                <td>{{ user.address }}</td>
+                <th>Birthdate</th>
+                <td>{{ user.birthdate ? user.birthdate|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>Phone</th>
-                <td>{{ user.phone }}</td>
+                <th>Identifiant</th>
+                <td>{{ user.identifiant }}</td>
+            </tr>
+            <tr>
+                <th>CreatedAt</th>
+                <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>ConnectedAt</th>
+                <td>{{ user.connectedAt ? user.connectedAt|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>
     </table>

@@ -12,10 +12,12 @@
                 <th>Email</th>
                 <th>Roles</th>
                 <th>Password</th>
-                <th>FirstName</th>
-                <th>LastName</th>
-                <th>Address</th>
-                <th>Phone</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Birthdate</th>
+                <th>Identifiant</th>
+                <th>CreatedAt</th>
+                <th>ConnectedAt</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -26,10 +28,12 @@
                 <td>{{ user.email }}</td>
                 <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
                 <td>{{ user.password }}</td>
-                <td>{{ user.firstName }}</td>
-                <td>{{ user.lastName }}</td>
-                <td>{{ user.address }}</td>
-                <td>{{ user.phone }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.birthdate ? user.birthdate|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ user.identifiant }}</td>
+                <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ user.connectedAt ? user.connectedAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>
                     <a href="{{ path('user_show', {'id': user.id}) }}">show</a>
                     <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
@@ -37,7 +41,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="9">no records found</td>
+                <td colspan="11">no records found</td>
             </tr>
         {% endfor %}
         </tbody>
