@@ -97,4 +97,12 @@ class Author
 
         return $this;
     }
+
+    public function getIdentity(): string {
+        return $this->firstName.' '.$this->lastName;
+    }
+
+    public function __toString(): string {
+        return $this->getIdentity();
+    }
 }
