@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Message;
 use App\Entity\Like;
 use App\Entity\Dislike;
+use App\Entity\MessageResponse;
 use App\Form\MessageType;
+use App\Form\MessageResponseType;
 use App\Repository\MessageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,12 +15,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * @Route("/message")
+ * @Route("/subjects")
  */
 class MessageController extends AbstractController
 {
     /**
-     * @Route("/", name="message_index", methods={"GET"})
+     * @Route("/list", name="message_index", methods={"GET"})
      */
     public function index(MessageRepository $messageRepository): Response
     {
@@ -57,17 +59,41 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="message_show", methods={"GET"})
+     * @Route("/subject-{id}", name="message_show", methods={"GET", "POST"})
      */
-    public function show(Message $message): Response
+    public function show(Request $request, Message $message): Response
     {
+
+        $newMessage = new Message();
+        $form = $this->createForm(MessageResponseType::class, $newMessage);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            if($user) {
+                $newMessage->setUser($user);
+            }
+            
+            $entityManager = $this->getDoctrine()->getManager();
+
+            $response = new MessageResponse();
+            $response->setMessageBaseId($message);
+            $response->setMessageRepId($newMessage);
+
+            $entityManager->persist($newMessage);
+            $entityManager->persist($response);
+            $entityManager->flush();
+        }
+
+
         return $this->render('message/show.html.twig', [
             'message' => $message,
+            'form' => $form->createView(),
         ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="message_edit", methods={"GET","POST"})
+     * @Route("/subject-{id}/edit", name="message_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Message $message): Response
     {
@@ -87,7 +113,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="message_delete", methods={"DELETE"})
+     * @Route("/delete-{id}", name="message_delete", methods={"DELETE"})
      */
     public function delete(Request $request, Message $message): Response
     {
@@ -100,7 +126,7 @@ class MessageController extends AbstractController
         return $this->redirectToRoute('message_index');
     }
     /**
-     * @Route("/like/{id}", name="message_like", methods={"POST"})
+     * @Route("/like-{id}", name="message_like", methods={"POST"})
      */
     public function like(Request $request, Message $message): Response
     {
@@ -119,7 +145,7 @@ class MessageController extends AbstractController
 
     }
     /**
-     * @Route("/dislike/{id}", name="message_dislike", methods={"POST"})
+     * @Route("/dislike-{id}", name="message_dislike", methods={"POST"})
      */
     public function dislike(Request $request, Message $message): Response
     {

@@ -78,7 +78,7 @@ class Message
         $this->dislikes = new ArrayCollection();
         $this->createdAt = new \DateTime();
         $this->updatedAt = new \DateTime();
-        $this->visible = 0;
+        $this->visible = 1;
         $this->title = '';
     }
 

@@ -29,11 +29,22 @@
             </tr>
             <tr>
                 <th>Visible</th>
-                <td>{{ message.visible ? 'Yes' : 'No' }}</td>
+                <td>{{ message.visible ? 'Yes' : 'No' }}
+                    {{ message.dislikes|length}}
+                    {{ message.messageRepId|length}}
+                </td>
             </tr>
         </tbody>
     </table>
-
+    <div>
+        {% for response in message.messageRepId %}
+            {% set message = response.messageRepId %}
+            <div style="display: block">
+                {{ message.content }} par {{ message.user.firstname }} {{ message.user.lastname }}
+            </div>
+        {% endfor %}
+    </div>
+    {{ include('message/_form.html.twig') }}
     <a href="{{ path('message_index') }}">back to list</a>
 
     <a href="{{ path('message_edit', {'id': message.id}) }}">edit</a>
