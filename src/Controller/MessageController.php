@@ -169,7 +169,14 @@ class MessageController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('message_index');
+    }
+    /**
+     * @Route("/report-{id}", name="message_report", methods={"GET", "POST"})
+     * @IsGranted("ROLE_USER")
+     */
+    public function report(Request $request, Message $message): Response{
+            $user = $this->getUser();
 
-
+            return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
     }
 }

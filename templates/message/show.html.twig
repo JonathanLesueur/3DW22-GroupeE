@@ -15,9 +15,9 @@
     </div>
     <div class="options d-flex flex-row justify-content-end py-1 px-1">
         <a class="btn btn-info mr-1" href="{{ path('message_edit', {'id': message.id}) }}">Editer</a>
-        <form method="POST" action=""><button class="btn btn-success mr-1" type="submit">Liker</button></form>
-        <form method="POST" action=""><button class="btn btn-danger mr-1" type="submit">Disliker</button></form>
-        <form method="POST" action=""><button class="btn btn-warning" type="submit">Signaler</button></form>
+        <form method="POST" action="{{ path('message_like', {'id': message.id}) }}"><button class="btn btn-success mr-1" type="submit">Liker</button></form>
+        <form method="POST" action="{{ path('message_dislike', {'id': message.id}) }}"><button class="btn btn-danger mr-1" type="submit">Disliker</button></form>
+        <a class="btn btn-warning" href="{{ path('message_report', {'id': message.id}) }}">Signaler</a>
     </div>
     <div class="responses mt-4 d-flex flex-column">
         <h2>Réponses :</h2>
