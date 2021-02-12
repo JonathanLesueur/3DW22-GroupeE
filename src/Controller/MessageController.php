@@ -13,14 +13,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Route("/subjects")
+ * @IsGranted("ROLE_USER")
  */
 class MessageController extends AbstractController
 {
     /**
      * @Route("/list", name="message_index", methods={"GET"})
+     * @IsGranted("ROLE_USER")
      */
     public function index(MessageRepository $messageRepository): Response
     {
@@ -31,6 +34,7 @@ class MessageController extends AbstractController
 
     /**
      * @Route("/new", name="message_new", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function new(Request $request): Response
     {
@@ -60,6 +64,7 @@ class MessageController extends AbstractController
 
     /**
      * @Route("/subject-{id}", name="message_show", methods={"GET", "POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function show(Request $request, Message $message): Response
     {
@@ -94,6 +99,7 @@ class MessageController extends AbstractController
 
     /**
      * @Route("/subject-{id}/edit", name="message_edit", methods={"GET","POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function edit(Request $request, Message $message): Response
     {
@@ -114,6 +120,7 @@ class MessageController extends AbstractController
 
     /**
      * @Route("/delete-{id}", name="message_delete", methods={"DELETE"})
+     * @IsGranted("ROLE_USER")
      */
     public function delete(Request $request, Message $message): Response
     {
@@ -127,6 +134,7 @@ class MessageController extends AbstractController
     }
     /**
      * @Route("/like-{id}", name="message_like", methods={"POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function like(Request $request, Message $message): Response
     {
@@ -146,6 +154,7 @@ class MessageController extends AbstractController
     }
     /**
      * @Route("/dislike-{id}", name="message_dislike", methods={"POST"})
+     * @IsGranted("ROLE_USER")
      */
     public function dislike(Request $request, Message $message): Response
     {

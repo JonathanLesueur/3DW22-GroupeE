@@ -3,51 +3,37 @@
 {% block title %}Message{% endblock %}
 
 {% block body %}
-    <h1>Message</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ message.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ message.title }}</td>
-            </tr>
-            <tr>
-                <th>Content</th>
-                <td>{{ message.content }}</td>
-            </tr>
-            <tr>
-                <th>CreatedAt</th>
-                <td>{{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>UpdatedAt</th>
-                <td>{{ message.updatedAt ? message.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Visible</th>
-                <td>{{ message.visible ? 'Yes' : 'No' }}
-                    {{ message.dislikes|length}}
-                    {{ message.messageRepId|length}}
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <div>
+<div class="d-flex flex-column">
+    <h1>{{ message.title }} <small class="font-italic" style="font-size: 14px">{{ message.likes|length }} like(s) | {{ message.dislikes|length}} dislike(s)</small></h1>
+    <div class="content">
+        <div class="content-message">
+            {{ message.content }}
+        </div>
+        <div class="content-footer font-italic" style="font-size: 14px">
+            Créé le : {{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s') : '' }} | Mis à jour le : {{ message.updatedAt ? message.updatedAt|date('Y-m-d H:i:s') : '' }}
+        </div>
+    </div>
+    <div class="options d-flex flex-row justify-content-end py-1 px-1">
+        <a class="btn btn-info mr-1" href="{{ path('message_edit', {'id': message.id}) }}">Editer</a>
+        <form method="POST" action=""><button class="btn btn-success mr-1" type="submit">Liker</button></form>
+        <form method="POST" action=""><button class="btn btn-danger mr-1" type="submit">Disliker</button></form>
+        <form method="POST" action=""><button class="btn btn-warning" type="submit">Signaler</button></form>
+    </div>
+    <div class="responses mt-4 d-flex flex-column">
+        <h2>Réponses :</h2>
         {% for response in message.messageRepId %}
             {% set message = response.messageRepId %}
-            <div style="display: block">
-                {{ message.content }} par {{ message.user.firstname }} {{ message.user.lastname }}
+            <div class="response-block">
+                <h3>{{ message.title }} <small class="font-italic" style="font-size: 14px">{{ message.user.firstname }} {{ message.user.lastname }}</small></h3>
+                <div>
+                    {{ message.content }}
+                </div>
             </div>
         {% endfor %}
     </div>
+</div>
     {{ include('message/_form.html.twig') }}
     <a href="{{ path('message_index') }}">back to list</a>
-
-    <a href="{{ path('message_edit', {'id': message.id}) }}">edit</a>
 
     {{ include('message/_delete_form.html.twig') }}
 {% endblock %}

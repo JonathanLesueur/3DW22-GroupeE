@@ -70,6 +70,11 @@ class Message
      */
     private $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Report::class, mappedBy="message")
+     */
+    private $reports;
+
     public function __construct()
     {
         $this->messageRep_id = new ArrayCollection();
@@ -80,6 +85,7 @@ class Message
         $this->updatedAt = new \DateTime();
         $this->visible = 1;
         $this->title = '';
+        $this->reports = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -275,6 +281,36 @@ class Message
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Report[]
+     */
+    public function getReports(): Collection
+    {
+        return $this->reports;
+    }
+
+    public function addReport(Report $report): self
+    {
+        if (!$this->reports->contains($report)) {
+            $this->reports[] = $report;
+            $report->setMessage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReport(Report $report): self
+    {
+        if ($this->reports->removeElement($report)) {
+            // set the owning side to null (unless already changed)
+            if ($report->getMessage() === $this) {
+                $report->setMessage(null);
+            }
+        }
 
         return $this;
     }
