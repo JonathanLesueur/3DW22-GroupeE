@@ -39,6 +39,12 @@ class Report
      */
     private $reason;
 
+    public function __construct()
+    {
+        $this->reportedAt = new \DateTime();
+        $this->reason = '';
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -5,9 +5,11 @@ namespace App\Controller;
 use App\Entity\Message;
 use App\Entity\Like;
 use App\Entity\Dislike;
+use App\Entity\Report;
 use App\Entity\MessageResponse;
 use App\Form\MessageType;
 use App\Form\MessageResponseType;
+use App\Form\ReportType;
 use App\Repository\MessageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -92,8 +94,6 @@ class MessageController extends AbstractController
             $entityManager->persist($response);
             $entityManager->flush();
         }
-
-
         return $this->render('message/show.html.twig', [
             'message' => $message,
             'form' => $form->createView(),
@@ -164,7 +164,7 @@ class MessageController extends AbstractController
         $entityManager->persist($like);
         $entityManager->flush();
 
-        return $this->redirectToRoute('message_index');
+        return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
 
 
     }
@@ -184,15 +184,39 @@ class MessageController extends AbstractController
         $entityManager->persist($dislike);
         $entityManager->flush();
 
-        return $this->redirectToRoute('message_index');
+        return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
     }
     /**
      * @Route("/subject-{id}/report", name="message_report", methods={"GET", "POST"})
      * @IsGranted("ROLE_USER")
      */
-    public function report(Request $request, Message $message): Response{
-            $user = $this->getUser();
+    public function report(Request $request, Message $message): Response
+    {
+        $user = $this->getUser();
+
+        $report = new Report();
+
+        $form = $this->createForm(ReportType::class, $report);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            $report->setUser($user);
+            $report->setMessage($message);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($report);
+            $entityManager->flush();
 
             return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
+        }
+
+        //return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
+
+        return $this->render('message/report.html.twig', [
+            'message' => $message,
+            'form' => $form->createView(),
+        ]);
     }
 }

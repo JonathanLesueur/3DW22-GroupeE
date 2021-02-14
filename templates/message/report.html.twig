@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Signaler le message{% endblock %}
+
+{% block body %}
+<h1>Signaler le message</h1>
+<p>Vous êtes sur le point d'effectuer un signalement pour le message de <strong>{{ message.user.firstname }} {{ message.user.lastname }}</strong> envoyé le <strong>{{ message.createdAt|date('Y-m-d H:i:s') }}</strong>. Vous pouvez indiquer la raison de ce signalement dans le champ ci-dessous.</p>
+<div>
+    {{ include('message/_report_form.html.twig') }}
+</div>
+{% endblock %}

@@ -10,7 +10,7 @@
             {{ message.content }}
         </div>
         <div class="content-footer font-italic" style="font-size: 14px">
-            Créé le : {{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s') : '' }} | Mis à jour le : {{ message.updatedAt ? message.updatedAt|date('Y-m-d H:i:s') : '' }}
+            Créé le : {{ message.createdAt ? message.createdAt|date('d/m/Y H:i:s') : '' }} | Mis à jour le : {{ message.updatedAt ? message.updatedAt|date('d/m/Y H:i:s') : '' }}
         </div>
     </div>
     <div class="options d-flex flex-row justify-content-end py-1 px-1">
@@ -22,18 +22,33 @@
     <div class="responses mt-4 d-flex flex-column">
         <h2>Réponses :</h2>
         {% for response in message.messageRepId %}
-            {% set message = response.messageRepId %}
+            {% set reponse = response.messageRepId %}
             <div class="response-block">
-                <h3>{{ message.title }} <small class="font-italic" style="font-size: 14px">{{ message.user.firstname }} {{ message.user.lastname }}</small></h3>
+                <h3>{{ reponse.title }} <small class="font-italic" style="font-size: 14px">{{ reponse.user.firstname }} {{ reponse.user.lastname }}</small></h3>
                 <div>
-                    {{ message.content }}
+                    {{ reponse.content }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div>
+        <h2>Répondre</h2>
+        {{ include('message/_form.html.twig') }}
+    </div>
+    <div class="reports  mt-4 d-flex flex-column">
+        <h2>Signalements :</h2>
+        {% for report in message.reports %}
+            <div class="report-block">
+                <strong>Par {{ report.user.firstname }} {{ report.user.lastname }} le {{ report.reportedAt|date('d/m/Y H:i:s') }}</strong>
+                <div>
+                    {{ report.reason }}
                 </div>
             </div>
         {% endfor %}
     </div>
 </div>
-    {{ include('message/_form.html.twig') }}
-    <a href="{{ path('message_index') }}">back to list</a>
+    
+    <a class="btn btn-info" href="{{ path('message_index') }}">back to list</a>
 
     {{ include('message/_delete_form.html.twig') }}
 {% endblock %}
