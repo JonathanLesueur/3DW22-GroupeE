@@ -1,0 +1,77 @@
+p, h2 {
+    margin:0px;
+}
+
+footer p {
+    color:white;
+}
+
+nav .btn-outline-light {
+    margin-left:10px;
+}
+
+.message {
+    width:100%;
+    margin:40px 0px;
+    padding:20px;
+    box-shadow: 0px 12px 24px 0px rgba(0, 0, 0, 0.07);
+}
+
+.body-top {
+    margin-top:40px;
+}
+
+.top, .bottom, .body-top {
+    width:100%;
+    display:flex;
+    flex-direction: row;
+    flex-wrap:nowrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.top .left {
+    display:flex;
+    align-items:center;
+}
+
+.top .left .edit {
+    margin-left:10px;
+}
+
+.top .left img {
+    width:22px;
+}
+
+.bottom {
+    margin-top:20px;
+}
+
+.bottom .right {
+    display:flex;
+}
+
+.like-button {
+    border:0px;
+    background:white;
+}
+
+.like-button img {
+    width:32px;
+}
+
+.meta {
+    display:flex;
+    flex-direction: row;
+    flex-wrap:wrap;
+    align-items:center;
+    margin:20px 0px;
+}
+
+.meta p {
+    font-style:italic;
+}
+
+.meta p span, .message-id p span {
+    font-weight:bold;
+}

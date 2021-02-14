@@ -4,19 +4,46 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link href="{{ asset('css/main.css') }}" rel="stylesheet" />
         {% block stylesheets %}{% endblock %}
 
         {% block javascripts %}{% endblock %}
     </head>
     <body>
         <header>
-
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="{{ path('index') }}">Forum</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                  </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                  <div class="navbar-nav mr-auto mt-2 mt-lg-0">
+                    {% if app.request.get('_route') == 'message_index' %}
+                        <a href="{{ path('message_index') }}" class="nav-item nav-link active">Voir tous les sujets</a>
+                    {% else %}
+                        <a href="{{ path('message_index') }}" class="nav-item nav-link">Voir tous les sujets</a>
+                    {% endif %}
+                    {% if app.request.get('_route') == 'message_new' %}
+                        <a href="{{ path('message_new') }}" class="nav-item nav-link active">Ajouter un sujet</a>
+                    {% else %}
+                        <a href="{{ path('message_new') }}" class="nav-item nav-link">Ajouter un sujet</a>
+                    {% endif %}
+                  </div>
+                  <form class="form-inline my-2 my-lg-0">
+                    <a href="{{ path('app_login') }}" role="button" class="btn btn-primary">Se connecter</a>
+                    <a href="{{ path('user_new') }}" role="button" class="btn btn-outline-light">S'inscrire</a>
+                    <a href="{{ path('app_logout') }}" role="button" class="btn btn-danger">Déconnexion</a>
+                  </form>
+                </div>
+              </nav>
         </header>
         <main class="container">
             {% block body %}{% endblock %}
         </main>
-        <footer>
-            <p>Réalisé par les étudiants de CVTic</p>
+        <footer class="bg-dark text-center text-lg-start">
+            <div class="text-center p-3">
+                <p>© 2021 - Réalisé par les étudiants de CVTic</p>
+            </div>
         </footer>
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
