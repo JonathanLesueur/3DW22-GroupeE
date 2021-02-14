@@ -75,6 +75,11 @@ class Message
      */
     private $reports;
 
+    /**
+     * @ORM\Column(type="string", length=15)
+     */
+    private $type;
+
     public function __construct()
     {
         $this->messageRep_id = new ArrayCollection();
@@ -86,6 +91,7 @@ class Message
         $this->visible = 1;
         $this->title = '';
         $this->reports = new ArrayCollection();
+        $this->type = 'subject';
     }
 
     public function getId(): ?int
@@ -311,6 +317,18 @@ class Message
                 $report->setMessage(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function setType(string $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

@@ -1,19 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Message index{% endblock %}
+{% block title %}Liste des sujets{% endblock %}
 
 {% block body %}
-    <h1>Message index</h1>
+    <h1>Liste des sujets</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Title</th>
-                <th>Content</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAt</th>
-                <th>Visible</th>
                 <th>actions</th>
                 <th>user</th>
                 <th>Like</th>
@@ -25,10 +23,8 @@
             <tr>
                 <td>{{ message.id }}</td>
                 <td>{{ message.title }}</td>
-                <td>{{ message.content }}</td>
                 <td>{{ message.createdAt ? message.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ message.updatedAt ? message.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ message.visible ? 'Yes' : 'No' }}</td>
                 <td>
                     <a href="{{ path('message_show', {'id': message.id}) }}">show</a>
                     <a href="{{ path('message_edit', {'id': message.id}) }}">edit</a>

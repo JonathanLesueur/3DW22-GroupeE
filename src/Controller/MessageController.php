@@ -22,13 +22,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class MessageController extends AbstractController
 {
     /**
-     * @Route("/list", name="message_index", methods={"GET"})
+     * @Route("/", name="message_index", methods={"GET"})
      * @IsGranted("ROLE_USER")
      */
     public function index(MessageRepository $messageRepository): Response
     {
+        $_subjectsList = $messageRepository->findBy(array('type' => 'subject', 'visible' => 1));
+
         return $this->render('message/index.html.twig', [
-            'messages' => $messageRepository->findAll(),
+            'messages' => $_subjectsList,
         ]);
     }
 
@@ -79,12 +81,13 @@ class MessageController extends AbstractController
                 $newMessage->setUser($user);
             }
             
-            $entityManager = $this->getDoctrine()->getManager();
+            $newMessage->setType('response');
 
             $response = new MessageResponse();
             $response->setMessageBaseId($message);
             $response->setMessageRepId($newMessage);
 
+            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($newMessage);
             $entityManager->persist($response);
             $entityManager->flush();
@@ -103,6 +106,19 @@ class MessageController extends AbstractController
      */
     public function edit(Request $request, Message $message): Response
     {
+        $isUser = $this->isGranted('ROLE_USER');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+
+        if($isAdmin) {
+
+        } else if($isUser) {
+
+        } else {
+            return $this->redirectToRoute('message_index');
+        }
+
+
+
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
 
@@ -119,7 +135,7 @@ class MessageController extends AbstractController
     }
 
     /**
-     * @Route("/delete-{id}", name="message_delete", methods={"DELETE"})
+     * @Route("/subject-{id}/delete", name="message_delete", methods={"DELETE"})
      * @IsGranted("ROLE_USER")
      */
     public function delete(Request $request, Message $message): Response
@@ -133,7 +149,7 @@ class MessageController extends AbstractController
         return $this->redirectToRoute('message_index');
     }
     /**
-     * @Route("/like-{id}", name="message_like", methods={"POST"})
+     * @Route("/subject-{id}/like", name="message_like", methods={"POST"})
      * @IsGranted("ROLE_USER")
      */
     public function like(Request $request, Message $message): Response
@@ -153,7 +169,7 @@ class MessageController extends AbstractController
 
     }
     /**
-     * @Route("/dislike-{id}", name="message_dislike", methods={"POST"})
+     * @Route("/subject-{id}/dislike", name="message_dislike", methods={"POST"})
      * @IsGranted("ROLE_USER")
      */
     public function dislike(Request $request, Message $message): Response
@@ -171,7 +187,7 @@ class MessageController extends AbstractController
         return $this->redirectToRoute('message_index');
     }
     /**
-     * @Route("/report-{id}", name="message_report", methods={"GET", "POST"})
+     * @Route("/subject-{id}/report", name="message_report", methods={"GET", "POST"})
      * @IsGranted("ROLE_USER")
      */
     public function report(Request $request, Message $message): Response{
