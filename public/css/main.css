@@ -30,9 +30,13 @@ nav .btn-outline-light {
     align-items: flex-start;
 }
 
-.top .left {
+.top .left, .bottom .left {
     display:flex;
     align-items:center;
+}
+
+.left a {
+    margin-right:10px;
 }
 
 .top .left .edit {
@@ -70,8 +74,23 @@ nav .btn-outline-light {
 
 .meta p {
     font-style:italic;
+    font-weight:lighter;
 }
 
 .meta p span, .message-id p span {
-    font-weight:bold;
+    font-weight:normal;
+}
+
+.message h3 {
+    font-size:18px;
+    font-weight:lighter;
+    margin-bottom:10px;
+}
+
+.message h3 span {
+    font-weight:normal;
+}
+
+.form label, .form button {
+    margin-top:20px;
 }
