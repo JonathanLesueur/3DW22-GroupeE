@@ -35,7 +35,7 @@
                         <a href="{{ path('user_new') }}" role="button" class="btn btn-outline-light">S'inscrire</a>
                     {% endif %}
                     {% if is_granted('ROLE_USER') %}
-                    <a href="{{ path('app_logout') }}" role="button" class="btn btn-danger">Déconnexion</a>
+                        <a href="{{ path('app_logout') }}" role="button" class="btn btn-danger">Déconnexion</a>
                     {% endif %}
                   </form>
                 </div>

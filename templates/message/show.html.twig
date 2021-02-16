@@ -28,7 +28,10 @@
     <div class="bottom">
         <div class="left">
             <a class="btn btn-warning" href="{{ path('message_report', {'id': message.id}) }}">Signaler</a>
+            {% if canChange == true %}
+            <a class="btn btn-info" href="{{ path('message_edit', {'id': message.id}) }}">Editer</a>
             {{ include('message/_delete_form.html.twig') }}
+            {% endif %}
         </div>
         <div class="right">
             <form method="POST" action="{{ path('message_like', {'id': message.id}) }}"><button type="submit" class="like-button"><img src="{{ asset('images/like.png') }}" /> ({{ message.likes|length }})</button></a></form>

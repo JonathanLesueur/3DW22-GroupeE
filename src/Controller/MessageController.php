@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use \DateTime;
 
 /**
  * @Route("/subjects")
@@ -23,6 +24,33 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class MessageController extends AbstractController
 {
+
+    private function changeIsPossible($message) {
+        $isUser = $this->isGranted('ROLE_USER');
+        $isAdmin = $this->isGranted('ROLE_ADMIN');
+        $acceptEdit = false;
+        
+        if($isUser) {
+            $acceptEdit = true;
+
+            $creationDate = $message->getCreatedAt();
+            $currentDate = new \DateTime();
+
+            $dateDiff = $currentDate->diff($creationDate);
+            $minutes = $dateDiff->days * 24 * 60;
+            $minutes += $dateDiff->h * 60;
+            $minutes += $dateDiff->i;
+
+            if(count($message->getLikes()) > 0 || count($message->getDislikes()) > 0 || count($message->getMessageRepId()) > 0 || count($message->getReports()) > 0 || $minutes >= 30) {
+                $acceptEdit = false;
+            }
+        }
+        if($isAdmin) {
+            $acceptEdit = true;
+        }
+
+        return $acceptEdit;
+    }
     /**
      * @Route("/", name="message_index", methods={"GET"})
      * @IsGranted("ROLE_USER")
@@ -73,6 +101,8 @@ class MessageController extends AbstractController
     public function show(Request $request, Message $message): Response
     {
 
+        $canChange = $this->changeIsPossible($message);
+
         $newMessage = new Message();
         $form = $this->createForm(MessageResponseType::class, $newMessage);
         $form->handleRequest($request);
@@ -94,9 +124,11 @@ class MessageController extends AbstractController
             $entityManager->persist($response);
             $entityManager->flush();
         }
+        
         return $this->render('message/show.html.twig', [
             'message' => $message,
             'form' => $form->createView(),
+            'canChange' => $canChange
         ]);
     }
 
@@ -106,18 +138,10 @@ class MessageController extends AbstractController
      */
     public function edit(Request $request, Message $message): Response
     {
-        $isUser = $this->isGranted('ROLE_USER');
-        $isAdmin = $this->isGranted('ROLE_ADMIN');
-
-        if($isAdmin) {
-
-        } else if($isUser) {
-
-        } else {
-            return $this->redirectToRoute('message_index');
+        $canChange = $this->changeIsPossible($message);
+        if(!$canChange) {
+            return $this->redirectToRoute('message_show', ['id' => $message->getId()]);
         }
-
-
 
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
@@ -130,7 +154,7 @@ class MessageController extends AbstractController
 
         return $this->render('message/edit.html.twig', [
             'message' => $message,
-            'form' => $form->createView(),
+            'form' => $form->createView()
         ]);
     }
 
