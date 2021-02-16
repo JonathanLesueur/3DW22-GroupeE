@@ -18,7 +18,6 @@
         <div class="top">
             <div class="left">
                 <h2><a href="{{ path('message_show', {'id': message.id}) }}">{{ message.title }}</a></h2>
-                <a class="edit" href="{{ path('message_edit', {'id': message.id}) }}"><img src="{{ asset('images/edit.png') }}" /></a>
             </div>
             <div class="message-id">
                 <p><span>ID</span> : {{ message.id }}</p>
