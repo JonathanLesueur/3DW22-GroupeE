@@ -30,9 +30,13 @@
                     {% endif %}
                   </div>
                   <form class="form-inline my-2 my-lg-0">
-                    <a href="{{ path('app_login') }}" role="button" class="btn btn-primary">Se connecter</a>
-                    <a href="{{ path('user_new') }}" role="button" class="btn btn-outline-light">S'inscrire</a>
+                    {% if is_granted('ROLE_USER') == false %}
+                        <a href="{{ path('app_login') }}" role="button" class="btn btn-primary">Se connecter</a>
+                        <a href="{{ path('user_new') }}" role="button" class="btn btn-outline-light">S'inscrire</a>
+                    {% endif %}
+                    {% if is_granted('ROLE_USER') %}
                     <a href="{{ path('app_logout') }}" role="button" class="btn btn-danger">Déconnexion</a>
+                    {% endif %}
                   </form>
                 </div>
               </nav>
