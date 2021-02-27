@@ -1,4 +1,7 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+<div class="form-group">
+    {{ form_label(form.reason, 'Raison du signalement') }}
+    {{ form_widget(form.reason, {'attr': {'class': 'form-control'}}) }}
+</div>
     <button class="btn btn-lg btn-primary">{{ button_label|default('Signaler') }}</button>
 {{ form_end(form) }}

@@ -1,4 +1,13 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
+{% if form.title is defined %}
+<div class="form-group">
+    {{ form_label(form.title, 'Titre du sujet') }}
+    {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+</div>
+{% endif %}
+<div class="form-group">
+    {{ form_label(form.content, 'Contenu du message') }}
+    {{ form_widget(form.content, {'attr': {'class': 'form-control'}}) }}
+</div>
     <button class="btn btn-lg btn-primary">{{ button_label|default("Créer") }}</button>
 {{ form_end(form) }}
