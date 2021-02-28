@@ -57,7 +57,7 @@ class MessageController extends AbstractController
      */
     public function index(MessageRepository $messageRepository): Response
     {
-        $_subjectsList = $messageRepository->findBy(array('type' => 'subject', 'visible' => 1));
+        $_subjectsList = $messageRepository->findBy(array('type' => 'subject', 'visible' => 1), array('id' => 'DESC'));
 
         return $this->render('message/index.html.twig', [
             'messages' => $_subjectsList,
@@ -166,6 +166,21 @@ class MessageController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$message->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
+
+            foreach($message->getMessageRepId() as $reponse) {
+                $entityManager->remove($reponse);
+            }
+            foreach($message->getLikes() as $like) {
+                $entityManager->remove($like);
+            }
+            foreach($message->getDislikes() as $dislike) {
+                $entityManager->remove($dislike);
+            }
+            foreach($message->getReports() as $report) {
+                $entityManager->remove($report);
+            }
+            $entityManager->flush();
+
             $entityManager->remove($message);
             $entityManager->flush();
         }
